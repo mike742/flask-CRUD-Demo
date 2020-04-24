@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>JokeBot</title>
+    <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="well text-center">
+            <h3>Jokes dashboard</h3>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col md-12">
+                <h2>Jokes List
+                    <button type="button" class="btn btn-success pull-right" data-toggle="modal"
+                        data-target="#modalAdd">Add New Joke</button>
+                </h2>
+
+                {%with messages = get_flashed_messages()%}
+                {%if messages%}
+                {%for message in messages%}
+                <div class="alert alert-success alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{message}}
+                </div>
+                {%endfor%}
+                {%endif%}
+                {%endwith%}
+
+                <table class="table table-stripped">
+                    <tr>
+                        <th>Id</th>
+                        <th>First Sentance</th>
+                        <th>Second Sentance</th>
+                        <th>Action</th>
+                    </tr>
+                    {%for joke in jokes%}
+                    <tr>
+                        <td>{{joke.0}}</td>
+                        <td>{{joke.1}}</td>
+                        <td>{{joke.2}}</td>
+                        <td>
+                            <a href="/update/{{joke.0}}" class="btn btn-warning btn-xs" data-toggle="modal"
+                                data-target="#modalEdit{{joke.0}}">Edit</a>
+                            <a href="/delete/{{joke.0}}" class="btn btn-danger btn-xs"
+                                onclick="return confirm('Are you sure to delete joke #{{joke.0}} ?')">Delete </a>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Modal -->
+                    <div id="modalEdit{{joke.0}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Edit Joke #{{joke.0}}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{url_for('update')}}" method="POST">
+                                        <input type="hidden" name="id" value="{{joke.0}}">
+                                        <div class="form-group">
+                                            <label>First Sentance:</label>
+                                            <input type="text" class="form-control" style="width: 100%"
+                                                name="firstSentence" value="{{joke.1}}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Second Sentance:</label>
+                                            <input type="text" class="form-control" style="width: 100%"
+                                                name="secondSentence" value="{{joke.2}}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary" type="submit">Update</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {%endfor%}
+
+                </table>
+
+            </div>
+        </div>
+
+        <!-- Add Modal -->
+        <div id="modalAdd" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add New Joke</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{url_for('insert')}}" method="POST">
+                            <div class="form-group">
+                                <label>First Sentance:</label>
+                                <input type="text" class="form-control" style="width: 100%" name="firstSentence"
+                                    required="1" />
+                            </div>
+                            <div class="form-group">
+                                <label>Second Sentance:</label>
+                                <input type="text" class="form-control" style="width: 100%" name="secondSentence"
+                                    required="1" />
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Insert Data</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="container">
+        <div class="well">
+            JokeBot ver 1.0
+            <div class="pull-right">by Mike Zorin</div>
+        </div>
+    </div>
+
+</body>
+
+<script type="text/javascript" src={{url_for('static', filename='js/jquery-3.5.0.min.js')}}></script>
+<script type="text/javascript" src={{url_for('static', filename='js/bootstrap.min.js')}}></script>
+
+</html>
+
+
